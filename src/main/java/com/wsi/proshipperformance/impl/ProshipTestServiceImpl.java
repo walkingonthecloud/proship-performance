@@ -6,7 +6,6 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -75,5 +74,17 @@ public class ProshipTestServiceImpl implements ProshipTestService, CommandLineRu
         numberOfCalls = args.length > 0 ? Integer.parseInt(args[0]) : 10;
         log.info("Starting proship tests for {} iterations", numberOfCalls);
         shipRequest();
+        log.info("Response times of calls made:");
+        log.info("-----------------------------");
+        int i = 1;
+        long total = 0;
+        for (long millis: averageResponseTimes)
+        {
+            total = total + millis;
+            log.info("Run {} response time in milli-second is: {}", i, millis);
+            i++;
+        }
+        log.info("-----------------------------");
+        log.info("Average response time was: {}", total/i);
     }
 }
