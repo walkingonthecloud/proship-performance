@@ -9,7 +9,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
@@ -41,17 +44,17 @@ public class ProshipTestServiceImpl implements ProshipTestService, CommandLineRu
     }
 
     @Override
-    public String shipRequest() throws IOException {
+    public String shipRequest() throws IOException, ParserConfigurationException, SAXException, TransformerException {
 
         ClassLoader classLoader = getClass().getClassLoader();
         String xmlString = IOUtils.toString(Objects.requireNonNull(classLoader.getResourceAsStream("shiprequest.xml")));
         String result=null;
         for (int i = 0; i < numberOfCalls; i++) {
-            //String shipRequestXml = dataRandomizerService.randomizeElementData(xmlString, fieldsToRandomize);
+            String shipRequestXml = dataRandomizerService.randomizeElementData(xmlString, fieldsToRandomize);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            HttpEntity<String> requestEntity = new HttpEntity<>(xmlString, headers);
+            HttpEntity<String> requestEntity = new HttpEntity<>(shipRequestXml, headers);
 
             Instant before = Instant.now();
             ResponseEntity<String> response = restTemplate.exchange(proshipUri, HttpMethod.POST, requestEntity, String.class);

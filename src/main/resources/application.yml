@@ -1,1 +1,3 @@
 proship.ship-request.uri: http://psprck-vdwn002.wsgcdev.local:3278/pws-rest/ils
+server:
+  port: 8086
