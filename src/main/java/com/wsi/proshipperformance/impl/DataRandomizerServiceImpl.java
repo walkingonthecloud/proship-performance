@@ -44,8 +44,7 @@ public class DataRandomizerServiceImpl implements DataRandomizerService {
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         StringWriter writer = new StringWriter();
         transformer.transform(new DOMSource(document), new StreamResult(writer));
-        String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
-        return output;
+        return writer.getBuffer().toString().replaceAll("\n|\r", "");
     }
 
     private String getRandomNumber(String tagName)
@@ -62,6 +61,14 @@ public class DataRandomizerServiceImpl implements DataRandomizerService {
             case "CCN_ORDER_NUMBER":
                 range = 99999999999999L - 10000000000000L + 1;
                 min = 10000000000000L;
+                break;
+            case "WEIGHT":
+                range = 100L - 10L + 1;
+                min = 10L;
+                break;
+            default:
+                range = 99999999L - 10000000L + 1;
+                min = 10000000L;
                 break;
         }
         long rand = (long)(Math.random() * range) + min;

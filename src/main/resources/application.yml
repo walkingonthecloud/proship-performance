@@ -1,3 +1,11 @@
-proship.ship-request.uri: http://psprck-vdwn002.wsgcdev.local:3278/pws-rest/ils
+---
+proship:
+  ship-request:
+    uri: http://psprck-vdwn002.wsgcdev.local:3278/pws-rest/ils
+shiprequest:
+  fields:
+    to:
+      randomize: CCN_CARTON_NUMBER,CCN_PICKTKT_CTRL,CCN_ORDER_NUMBER,WEIGHT
 server:
   port: 8086
+

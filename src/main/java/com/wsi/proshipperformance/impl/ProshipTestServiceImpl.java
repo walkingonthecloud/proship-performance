@@ -30,7 +30,8 @@ public class ProshipTestServiceImpl implements ProshipTestService, CommandLineRu
 
     private List<Long> averageResponseTimes = new ArrayList<>();
 
-    private final List<String> fieldsToRandomize = Arrays.asList("CCN_CARTON_NUMBER", "CCN_PICKTKT_CTRL", "CCN_ORDER_NUMBER");
+    @Value("#{'${shiprequest.fields.to.randomize}'.split(',')}")
+    private List<String> fieldsToRandomize;
 
     private Integer numberOfCalls;
 
@@ -74,7 +75,7 @@ public class ProshipTestServiceImpl implements ProshipTestService, CommandLineRu
 
     @Override
     public void run(String... args) throws Exception {
-        numberOfCalls = args.length > 0 ? Integer.parseInt(args[0]) : 10;
+        numberOfCalls = args.length > 0 ? Integer.parseInt(args[0]) : 5;
         log.info("Starting proship tests for {} iterations", numberOfCalls);
         shipRequest();
         log.info("Response times of calls made:");
