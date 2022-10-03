@@ -2,6 +2,7 @@ package com.wsi.proshipperformance.impl;
 
 import com.wsi.proshipperformance.api.DataRandomizerService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -20,10 +21,14 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Random;
 
 @Component
 @Slf4j
 public class DataRandomizerServiceImpl implements DataRandomizerService {
+
+    @Value("#{'${proship.services}'.split(',')}")
+    private List<String> serviceLevels;
 
     public DataRandomizerServiceImpl(){}
 
@@ -50,6 +55,7 @@ public class DataRandomizerServiceImpl implements DataRandomizerService {
     private String getRandomNumber(String tagName)
     {
         long range = 0;
+        float lengthRange, widthRange, heightRange, length, width, height = 0;
         long min = 0;
         switch(tagName)
         {
@@ -66,10 +72,27 @@ public class DataRandomizerServiceImpl implements DataRandomizerService {
                 range = 100L - 10L + 1;
                 min = 10L;
                 break;
-            default:
-                range = 99999999L - 10000000L + 1;
-                min = 10000000L;
-                break;
+            case "SERVICE":
+                Random random = new Random();
+                int index = random.nextInt(serviceLevels.size());
+                return serviceLevels.get(index);
+            case "DIMENSION":
+                lengthRange = 10.50f - 5.00f + 1f;
+                widthRange = 10.50f - 5.00f + 1f;
+                heightRange = 12.00f - 5.00f + 1f;
+                length = (float) Math.random() * lengthRange + 5.00f;
+                width = (float) Math.random() * widthRange + 5.00f;
+                height = (float) Math.random() * heightRange + 5.00f;
+
+                length = Math.round(length * 100) / 100.0f;
+                width = Math.round(width * 100) / 100.0f;
+                height = Math.round(height * 100) / 100.0f;
+
+                return String.valueOf(length)
+                        .concat("X")
+                        .concat(String.valueOf(width)
+                                .concat("X")
+                                .concat(String.valueOf(height)));
         }
         long rand = (long)(Math.random() * range) + min;
         return String.valueOf(rand);
